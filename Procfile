@@ -1,1 +1,1 @@
-web: gunicorn TextThem:app --log-file=-
+web: gunicorn TextThem:app
