@@ -3,16 +3,22 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
 
+<div class=centeredImage
+<a href="/"><img src="static/logo.png" alt="logo" align="middle" /></a>
+</div>
+
+
 <body>
-<div class=container>
-<div class=banner>
-<H1>Text Them!</H1>
-</div> 
+<ul id="menu_wrap" class="Orange"><li class="button"><a href="#">Home</a></li><li class="button"><a href="#">Login</a></li><li class="button"><a href="#">Register</a></li><li class="button"><a href="#">About Us</a></li> </ul> 
+  
+</body>  
+
+
 <div class=page>
 <h2> Send a Text </H2>
   <div class=metanav>
 
-    <form action="{{ url_for('home_page') }}" method=post>
+    <form action="{{ url_for('home_page') }}" method=post class=form>
     
       <dt>Enter number for text:
       <dd><input type=text name=number>
@@ -25,7 +31,7 @@
   
 
   
+
 </div>
 </div>
 
-</body>
