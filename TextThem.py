@@ -25,4 +25,4 @@ def home_page():
     return render_template('layout.html', error=error)		
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
