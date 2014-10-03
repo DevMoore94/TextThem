@@ -15,7 +15,7 @@ def home_page():
     if request.method == 'POST':
 		
 		if(request.form['number'] == "" or request.form['message'] == ""):
-			error = "ERROR: Please fill in the above fields"
+			error = "Please fill in the above fields"
 		else:
 			number = request.form['number']
 			message = request.form['message']
