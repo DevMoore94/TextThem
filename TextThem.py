@@ -7,7 +7,7 @@ import requests
 #create app
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/' ,methods=['GET', 'POST'] )
 def home_page():
     
     error = None
