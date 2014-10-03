@@ -1,0 +1,1 @@
+web: gunicorn TextThem:app --log-file=-
