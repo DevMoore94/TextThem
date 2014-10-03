@@ -1,7 +1,10 @@
 <!doctype html>
 <title>Texting App</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<div class=body>
+
+
+<body>
+<div class=container>
 <div class=banner>
 <H1>Text Them!</H1>
 </div> 
@@ -10,17 +13,19 @@
   <div class=metanav>
 
     <form action="{{ url_for('home_page') }}" method=post>
-    <dl>
+    
       <dt>Enter number for text:
       <dd><input type=text name=number>
       <dt>Enter message for text:
       <dd><input type=text name=message>
-      <dd><input type=submit value=send>
-      <dt> {{ error }}
-    </dl>
+      <dd><input type=submit value = Send class="myButton">
+      <dt> {% if error %} <p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    
   </form>
   
 
   
 </div>
 </div>
+
+</body>
