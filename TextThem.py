@@ -11,7 +11,7 @@ app = Flask(__name__)
 def home_page():
     
 	
-	#requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+15062278951', 'message': 'Hello from Blower.io'})
+	requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+15062278951', 'message': 'Hello from Blower.io'})
 	return render_template('layout.html')
 
 
