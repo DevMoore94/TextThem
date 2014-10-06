@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+<div class=page>
+<h2> Send a Text </H2>
+  <div class=metanav>
+
+    <form action="{{ url_for('home_page') }}" method=post class=form>
+    
+      <dt>Enter number for text:
+      <dd><input type=text name=number>
+      <dt>Enter message for text:
+      <dd><input type=text name=message>
+      <dd><input type=submit value = Send class="myButton">
+      <dt> {% if error %} <p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    
+  </form>
+  
+
+
+</div>
+{% endblock %}
+
