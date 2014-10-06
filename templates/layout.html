@@ -2,36 +2,24 @@
 <title>Text Them</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
+<div>
 
 <div class=centeredImage
 <a href="/"><img src="static/logo.png" alt="logo" align="middle" /></a>
-</div>
-
+</div>  
 
 <body>
-<ul id="menu_wrap" class="Orange"><li class="button"><a href="#">Home</a></li><li class="button"><a href="#">Login</a></li><li class="button"><a href="#">Register</a></li><li class="button"><a href="#">About Us</a></li> </ul> 
+<ul id="menu_wrap" class="Orange"><li class="button"><a href="{{ url_for('home_page') }}">Home</a></li><li class="button"><a href="{{ url_for('login') }}">Login</a></li><li class="button"><a href="#">Register</a></li><li class="button">
+<a href="{{ url_for('aboutUs') }}">About Us</a></li> </ul> 
   
 </body>  
 
 
-<div class=page>
-<h2> Send a Text </H2>
-  <div class=metanav>
+{% block body %}
 
-    <form action="{{ url_for('home_page') }}" method=post class=form>
-    
-      <dt>Enter number for text:
-      <dd><input type=text name=number>
-      <dt>Enter message for text:
-      <dd><input type=text name=message>
-      <dd><input type=submit value = Send class="myButton">
-      <dt> {% if error %} <p class=error><strong>Error:</strong> {{ error }}{% endif %}
-    
-  </form>
-  
-
-  
+{% endblock %}
 
 </div>
-</div>
+
+
 
