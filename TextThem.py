@@ -22,7 +22,17 @@ def home_page():
 			requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
 	
     
-    return render_template('layout.html', error=error)		
+    return render_template('send.html', error=error)		
+
+@app.route('/login' ,methods=['GET', 'POST'] )
+def login():
+	return render_template('login.html')
+
+@app.route('/about' ,methods=['GET', 'POST'] )
+def aboutUs():
+	return render_template('aboutus.html')
+
+
 
 if __name__ == '__main__':
     app.run()
