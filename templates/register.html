@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block body %}
+	<div class=page>
+	<h2> Register </H2>
+  <div class=metanav>	
+	  <form action="{{ url_for('register') }}" method=post class=form>
+      <dl>
+      <dt> {% if error %} <p class=error><strong>Error:</strong> {{ error }}{% endif %}
+      <dt>Username:
+      <dd><input type=text name=username>
+      <dt>Password:
+      <dd><input type=password name=password>
+      <dd><input type=submit value = Login class="myButton">
+
+    </dl>
+  </form>
+
+</div>
+</div>
+{% endblock %}
