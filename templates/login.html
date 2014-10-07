@@ -11,6 +11,7 @@
       <dt>Password:
       <dd><input type=password name=password>
       <dd><input type=submit value = Login class="myButton">
+      <dt> {% if error %} <p class=error><strong>Error:</strong> {{ error }}{% endif %}
     </dl>
   </form>
 
