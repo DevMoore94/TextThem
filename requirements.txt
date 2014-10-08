@@ -1,8 +1,10 @@
 Flask==0.10.1
+Flask-SQLAlchemy==2.0
 Jinja2==2.7.3
 MarkupSafe==0.23
+SQLAlchemy==0.9.7
 Werkzeug==0.9.6
 itsdangerous==0.24
-redis==2.10.3
+psycopg2==2.5.2
 requests==2.4.1
 gunicorn==19.1.1
