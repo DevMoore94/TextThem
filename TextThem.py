@@ -4,22 +4,23 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from contextlib import closing
 import requests
 import urlparse
-import redis
+from flask.ext.sqlalchemy import SQLAlchemy
 import random
 
 
-#Configuation
-REDISCLOUD_URL = 'redis://rediscloud:CVl0JKumOJclKc9l@pub-redis-19100.us-east-1-2.1.ec2.garantiadata.com:19100'
-SECRET_KEY = 'development key'
-DEBUG = False
+
+
+
 
 
 
 #create app
 app = Flask(__name__)
-app.config.from_object(__name__)  
 
-r = redis.Redis(host="pub-redis-19100.us-east-1-2.1.ec2.garantiadata.com", port="19100", password="CVl0JKumOJclKc9l")
+app.config['SQLALCHEMY_DATABASE_URI'] = "os.environ['DATABASE_URL']"
+db = SQLAlchemy(app)
+
+
 
 def generateMessage():
 	error = None
@@ -94,10 +95,10 @@ def login():
 
 		user = request.form['username']
 		
-		if r.get(user) != request.form['password']:
+		if (True):
 			error = 'The username or password you have entered is incorrect'
 		else:
-			session['logged_in'] = True
+
 			return redirect(url_for('home_page'))
 			
 
