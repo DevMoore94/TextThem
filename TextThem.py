@@ -17,11 +17,12 @@ import random
 app = Flask(__name__)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
 db = SQLAlchemy(app)
 
 class User(db.Model):
-  __tablename__ = 'users'
+ 
   uid = db.Column(db.Integer, primary_key = True)
   firstname = db.Column(db.String(100))
   lastname = db.Column(db.String(100))
@@ -129,20 +130,23 @@ def register():
 	#Check for missing fields
     error = None
     if request.method == 'POST':
-        if request.form['username'] == "" and request.form['password'] == "":
-                error = 'Please fill in the password field, Username field and email field. Thank you.'
-
-        elif request.form['password'] == "":
-                error = 'Please fill in the password field'
-
-        elif request.form['username'] == "":          
-                error = 'Please fill in the username field'
+        if request.form['username'] == "" or request.form['password'] == "" or request.form['email'] == "" or request.form['firstname'] == "" or request.form['lastname'] == "":
+                error = 'Please fill all fields. Thank you.'
 
         else:
-        	#Create a key in redis database
-        	r.set(request['username'], request['password'])
+        	#Create a new entry in the heroku postgres database
+        	try:      		
+        	    newUser = User(request.form['firstname'],request.form['lastname'], request.form['username'], request.form['email'], request.form['password'])
+        	    db.session.add(newUser)
+        	    db.session.commit()
 
-    return render_template('register.html', error=error)\
+        	except Exception as e:
+        		error = "There was a problem with our database. Please try again."
+        		print "EXCEPTION: " + e.message
+        		return render_template('register.html', error=error)
+
+
+    return render_template('register.html', error=error)
 
 
 @app.route('/RandomGenerator' ,methods=['GET', 'POST'] )
@@ -162,8 +166,8 @@ def randomgenerator():
 			adjective = request.form['adjective'] 
 			noun = request.form['noun']
 			message =  (adjective + " " + noun)
-			print message
 
+			#Sends the text message with BLOWER.IO
 			requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
 
 	
