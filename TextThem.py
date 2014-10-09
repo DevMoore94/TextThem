@@ -26,9 +26,9 @@ db = SQLAlchemy(app)
 
 
 #setups flask-login
-#lm = LoginManager()
-#lm.init_app(app)
-#oid = OpenID(app,open_basedir)
+lm = LoginManager()
+lm.init_app(app)
+oid = OpenID(app,open_basedir)
 
 class User(db.Model):
   __tablename__ = 'users'
