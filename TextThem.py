@@ -31,7 +31,7 @@ db = SQLAlchemy(app)
 #oid = OpenID(app,open_basedir)
 
 class User(db.Model):
- 
+  __tablename__ = 'users'
   uid = db.Column(db.Integer, primary_key = True)
   firstname = db.Column(db.String(100))
   lastname = db.Column(db.String(100))
