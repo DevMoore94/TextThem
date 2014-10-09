@@ -21,8 +21,8 @@ from flask.ext.openid import OpenID
 app = Flask(__name__)
 
 #setups flask-login
-login_manager = LoginManager()
-login_manager.init_app(app)
+#login_manager = LoginManager()
+#login_manager.init_app(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 #app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
