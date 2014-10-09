@@ -29,7 +29,13 @@ db = SQLAlchemy(app)
 #setups flask-login
 
 lm = LoginManager()
-#lm.init_app(app)
+lm.init_app(app)
+
+@login_manager.user_loader
+def load_user(userid):
+    return User.get(userid)
+
+
 
 
 class User(db.Model):
