@@ -13,7 +13,7 @@ from flask.ext.openid import OpenID
 
 
 #path to tmp folder for openID
-basedir = os.path.abspath(os.path.dirname(__file__))
+#basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 
@@ -21,15 +21,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
 db = SQLAlchemy(app)
 
 
 #setups flask-login
 lm = LoginManager()
 lm.init_app(app)
-oid = OpenID(app,os.path.join(basedir,'static', 'tmp'))
+oid = OpenID(app,'static/tmp')
 
 class User(db.Model):
   __tablename__ = 'users'
