@@ -111,6 +111,7 @@ def generateMessage():
 	#catch if there is a problem opening the files	
 	except IOError:
 		error = "We are experiencing some problems. Sorry for the inconvenience. :("
+		print("ERORR:" + e.message)
 		return render_template('randomtext.html', error=error)	
 #end of generateMessage() function
 
