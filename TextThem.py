@@ -6,8 +6,8 @@ import requests
 import urlparse
 from flask.ext.sqlalchemy import SQLAlchemy
 import random
-from flask_login import LoginManager
-from flask_openid import OpenID
+from flask.ext.login import LoginManager
+from flask.ext.openid import OpenID
 
 
 
@@ -22,14 +22,17 @@ app = Flask(__name__)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
 db = SQLAlchemy(app)
 
 
 #setups flask-login
-lm = LoginManager()
-lm.init_app(app)
-oid = OpenID(app,'static/tmp')
+try:
+	lm = LoginManager()
+	lm.init_app(app)
+#oid = OpenID(app,'static/tmp')
+except Exception as e:
+	print "ERROR: " + e.message
 
 class User(db.Model):
   __tablename__ = 'users'
