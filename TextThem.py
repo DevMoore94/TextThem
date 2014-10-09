@@ -28,7 +28,7 @@ db = SQLAlchemy(app)
 
 #setups flask-login
 
-#lm = LoginManager()
+lm = LoginManager()
 #lm.init_app(app)
 
 
