@@ -27,12 +27,10 @@ db = SQLAlchemy(app)
 
 
 #setups flask-login
-try:
-	lm = LoginManager()
-	lm.init_app(app)
-#oid = OpenID(app,'static/tmp')
-except Exception as e:
-	print "ERROR: " + e.message
+
+#lm = LoginManager()
+#lm.init_app(app)
+
 
 class User(db.Model):
   __tablename__ = 'users'
