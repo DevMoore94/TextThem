@@ -122,6 +122,7 @@ def register():
 
 
 @app.route('/RandomGenerator' ,methods=['GET', 'POST'] )
+@login_required
 def randomgenerator():
 	generated = generateMessage()
 	adjective =  generated[0]
@@ -152,10 +153,7 @@ def randomgenerator():
 @app.route('/logout')
 @login_required
 def logout():
-    """
-    Log out a logged in user.  Then redirect them back to the main page of the
-    site.
-    """
+    
     logout_user()
     return redirect(url_for('index'))
 
