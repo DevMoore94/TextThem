@@ -6,78 +6,37 @@ import requests
 import urlparse
 from flask.ext.sqlalchemy import SQLAlchemy
 import random
-from flask_login import LoginManager
-from flask.ext.openid import OpenID
+from flask.ext.stormpath import (
+    StormpathManager,
+    User,
+    login_required,
+    login_user,
+    logout_user,
+    user,
+)
 
-
-
-
-#path to tmp folder for openID
-#basedir = os.path.abspath(os.path.dirname(__file__))
+from stormpath.error import Error as StormpathError
 
 
 
 #create app
 app = Flask(__name__)
 
-#setups flask-login
-#login_manager = LoginManager()
-#login_manager.init_app(app)
+#Setup Stormpath variables
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+app.config['STORMPATH_API_KEY_ID'] =  os.environ['STORMPATH_API_KEY_ID']
+app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
+app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-#app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xqogpkihzswsuo:GHLg4AsJTF7rgyJv5fa3hj3dxI@ec2-184-73-194-196.compute-1.amazonaws.com:5432/d5a4164ud0gk36"
-db = SQLAlchemy(app)
-
-
-
-
-@login_manager.user_loader
-def load_user(userid):
-    return User.get(userid)
+app.config['STORMPATH_ENABLE_USERNAME'] = True
+app.config['STORMPATH_REQUIRE_USERNAME'] = True
 
 
+stormpath_manager = StormpathManager(app)
+
+stormpath_manager.login_view = 'login'
 
 
-class User(db.Model):
-  __tablename__ = 'users'
-  uid = db.Column(db.Integer, primary_key = True)
-  firstname = db.Column(db.String(100))
-  lastname = db.Column(db.String(100))
-  username = db.Column(db.String(100))
-  email = db.Column(db.String(120), unique=True)
-  password = db.Column(db.String(54))
-   
-  def __init__(self, firstname, lastname, username, email, password):
-    self.firstname = firstname.title()
-    self.lastname = lastname.title()
-    self.username = username
-    self.email = email.lower()
-    self.password = password
-  
-
-  def is_authenticated(self):
-  	return True
-
-  def is_active(self):
-        return True
-
-  def is_anonymous(self):
-        return False
-
-  def get_id(self):
-  	try:
-  		return unicode(self.id)  # python 2
-
-  	except NameError:
-  		return str(self.id)  # python 3
-
-  def __repr__(self):
-   	return '<User %r>' % (self.username)    
-     
-
-#@lm.user_loader
-#def load_user(id):
-    #return User.query.get(int(id))
 
 
 
@@ -123,14 +82,16 @@ def generateMessage():
 		return render_template('randomtext.html', error=error)	
 #end of generateMessage() function
 
-
-
 @app.route('/' ,methods=['GET', 'POST'] )
-def home_page():
+def index():
+	return render_template('index.html')
+
+
+
+@app.route('/sendtext' ,methods=['GET', 'POST'] )
+@login_required
+def send_text():
    
-    
-	
-	 
     error = None
 
     if request.method == 'POST':
@@ -147,47 +108,17 @@ def home_page():
 
 @app.route('/login' ,methods=['GET', 'POST'] )
 def login():
+	return render_template('login.html')
+	
 
-	error = None
-
-	if request.method == 'POST':
+	
 
 
-		user = request.form['username']
-		
-		if (True):
-			error = 'The username or password you have entered is incorrect'
-		else:
-
-			return redirect(url_for('home_page'))
-			
-
-	return render_template('login.html',error=error)
 
 #register a user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
-	#Check for missing fields
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] == "" or request.form['password'] == "" or request.form['email'] == "" or request.form['firstname'] == "" or request.form['lastname'] == "":
-                error = 'Please fill all fields. Thank you.'
-
-        else:
-        	#Create a new entry in the heroku postgres database
-        	try:      		
-        	    newUser = User(request.form['firstname'],request.form['lastname'], request.form['username'], request.form['email'], request.form['password'])
-        	    db.session.add(newUser)
-        	    db.session.commit()
-
-        	except Exception as e:
-        		error = "There was a problem with our database. Please try again."
-        		print "EXCEPTION: " + e.message
-        		return render_template('register.html', error=error)
-
-
-    return render_template('register.html', error=error)
+    return render_template('register.html')
 
 
 @app.route('/RandomGenerator' ,methods=['GET', 'POST'] )
@@ -216,6 +147,19 @@ def randomgenerator():
 	
 	return render_template('randomtext.html',error=error, adjective=adjective, noun=noun)
 
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    """
+    Log out a logged in user.  Then redirect them back to the main page of the
+    site.
+    """
+    logout_user()
+    return redirect(url_for('index'))
+
+
 @app.route('/about' ,methods=['GET', 'POST'] )
 def aboutUs():
 	return render_template('aboutus.html')
@@ -223,4 +167,4 @@ def aboutUs():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
