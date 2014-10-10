@@ -4,7 +4,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from contextlib import closing
 import requests
 import urlparse
-from flask.ext.sqlalchemy import SQLAlchemy
+
 import random
 from flask.ext.stormpath import (
     StormpathManager,
