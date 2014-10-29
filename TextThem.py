@@ -17,7 +17,7 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-Production = True
+Production = False
 
 #create app
 app = Flask(__name__)
@@ -66,29 +66,40 @@ def generateMessage():
 		nounRan = random.randint(0, 3719)
 
 
-		
+
 		#locate the randomly selected lines in the corrosponding file/
 		for line in adjfile:
 			if(lineNum == adjRan):
 				adjective = line
 				break;
 			lineNum = lineNum + 1
-		lineNum = 0 
+		lineNum = 0
 
 		for line in nounfile:
 			if(lineNum == nounRan):
 				noun = line
 				break;
-			lineNum = lineNum+1	
+			lineNum = lineNum+1
 
-		#return the selected words	
+		#return the selected words
 		return (adjective, noun)
-	#catch if there is a problem opening the files	
+	#catch if there is a problem opening the files
 	except IOError:
 		error = "We are experiencing some problems. Sorry for the inconvenience. :("
 		print("ERORR:" + e.message)
-		return render_template('randomtext.html', error=error)	
+		return render_template('randomtext.html', error=error)
 #end of generateMessage() function
+
+@app.route('/smsapi/<data>')
+#@login_required
+def send_message(data):
+    number = requests.args.get('number')
+    if Production:
+        requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+    else:
+        app.logger.info(str({'to': '+' + number, 'message': message}))
+
+
 
 @app.route('/' ,methods=['GET', 'POST'] )
 def index():
@@ -97,30 +108,30 @@ def index():
 
 
 @app.route('/sendtext' ,methods=['GET', 'POST'] )
-@login_required
+#@login_required
 def send_text():
-   
+
     error = None
 
     if request.method == 'POST':
-		
+
 		if(request.form['number'] == "" or request.form['message'] == ""):
 			error = "Please fill in the above fields"
 		else:
 			number = request.form['number']
 			message = request.form['message']
-			requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
-	
-    
-    return render_template('send.html', error=error)		
+			send_message(number, message)
+
+
+    return render_template('send.html', error=error)
 
 @app.route('/login' ,methods=['GET', 'POST'] )
 def login():
 	print('test')
 	return render_template('login.html')
-	
 
-	
+
+
 
 
 
@@ -139,22 +150,22 @@ def randomgenerator():
 
 	error = None
 	if request.method == 'POST':
-		
+
 		if(request.form['number'] == "" ):
 			error = "Please fill in number for the text and select an adjective and noun"
 		else:
-			
+
 			number = request.form['number']
-			adjective = request.form['adjective'] 
+			adjective = request.form['adjective']
 			noun = request.form['noun']
 			message =  (adjective + " " + noun)
 
 			#Sends the text message with BLOWER.IO
-			requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+			send_message(number, message)
 
-	
 
-	
+
+
 	return render_template('randomtext.html',error=error, adjective=adjective, noun=noun)
 
 
@@ -162,7 +173,7 @@ def randomgenerator():
 @app.route('/logout')
 @login_required
 def logout():
-    
+
     logout_user()
     return redirect(url_for('index'))
 
