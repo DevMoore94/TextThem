@@ -17,19 +17,27 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-
+Production = True
 
 #create app
 app = Flask(__name__)
 
 #Setup Stormpath variables
-app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-app.config['STORMPATH_API_KEY_ID'] =  os.environ['STORMPATH_API_KEY_ID']
-app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
-app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
+if(Production):
+
+	app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+	app.config['STORMPATH_API_KEY_ID'] =  os.environ['STORMPATH_API_KEY_ID']
+	app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
+	app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
+else:
+	app.config['SECRET_KEY'] = "1s2b3c4dzxy"
+	app.config['STORMPATH_API_KEY_ID'] =  "C1F8HU66CJ64TAY0138WHEJJX"
+	app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
+	app.config['STORMPATH_APPLICATION'] = "TextThem"
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
+
 
 
 stormpath_manager = StormpathManager(app)
@@ -108,6 +116,7 @@ def send_text():
 
 @app.route('/login' ,methods=['GET', 'POST'] )
 def login():
+	print('test')
 	return render_template('login.html')
 	
 
