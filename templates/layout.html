@@ -2,17 +2,16 @@
 <title>Text Them</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
+<body>
 <div>
 
-<div class=centeredImage
+<div class=centeredImage>
 <a href="/"><img src="static/logo.png" alt="logo" align="middle" /></a>
 </div>  
 
-<body>
 <ul id="menu_wrap" class="Orange"><li class="button"><a href="{{ url_for('send_text')}}">Send Text</a></li><li class="button"><a href="{{ url_for('randomgenerator') }}">Random Generator</a></li><li class="button"><a href="{{ url_for('login') }}">Login</a></li><li class="button"><a href="{{ url_for('register') }}">Register</a></li> <li class="button"><li class="button"><a href="{{ url_for('logout')}}">Logout</a></li>
 <li class="button"> <a href="{{ url_for('aboutUs') }}">About Us</a></li> </ul> 
   
-</body>  
 
 
 {% block body %}
@@ -20,6 +19,7 @@
 {% endblock %}
 
 </div>
+</body>  
 
 
 
