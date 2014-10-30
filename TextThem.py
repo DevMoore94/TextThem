@@ -37,6 +37,7 @@ else:
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
+app.config['STORMPATH_ENABLE_FORGOT_PASSWORD'] = True
 
 stormpath_manager = StormpathManager(app)
 
