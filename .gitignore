@@ -52,3 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+.idea/misc.xml
+
+.idea/scopes/scope_settings.xml
+
+.idea/workspace.xml
