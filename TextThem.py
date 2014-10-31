@@ -51,6 +51,11 @@ stormpath_manager.login_view = 'login'
 
 
 def generateMessage():
+    """Generate a random adjective and noun
+
+    Returns:
+        tuple - (string, string)
+    """
     error = None
     #Try to open files
     try:
@@ -84,7 +89,7 @@ def generateMessage():
             lineNum = lineNum + 1
 
         #return the selected words
-        return (adjective, noun)
+        return (adjective.strip(), noun.strip())
     #catch if there is a problem opening the files
     except IOError:
         error = "We are experiencing some problems. Sorry for the inconvenience. :("
