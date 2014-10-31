@@ -12,8 +12,10 @@
 		<input class="form-control" type=text id="InputMessage" name="message">
 	</div>
 	<button type=submit value=Send class="btn btn-default disabled">Submit</button>
+	<button type=button onclick="set_text()" class="btn btn-default">Random</button>
 	{% if error %} <div class="error"><strong>Error:</strong> {{ error }}{% endif %}
 </form>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='randomgenerator.js') }}"></script>
 <script>
     var US_CA_PHONE_NO_REGEX = /^1[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
     

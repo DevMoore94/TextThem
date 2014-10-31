@@ -1,6 +1,6 @@
 import os, sys
 from flask import Flask, request, session, g, redirect, url_for, \
-    abort, render_template, flash
+    abort, render_template, flash, jsonify
 from contextlib import closing
 import requests
 import urlparse
@@ -17,7 +17,7 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-Production = True
+Production = False
 
 # create app
 app = Flask(__name__)
@@ -154,26 +154,7 @@ def register():
 @app.route('/RandomGenerator', methods=['GET', 'POST'])
 def randomgenerator():
     generated = generateMessage()
-    adjective = generated[0]
-    noun = generated[1]
-
-    error = None
-    if request.method == 'POST':
-
-        if (request.form['number'] == "" ):
-            error = "Please fill in number for the text and select an adjective and noun"
-        else:
-
-            number = request.form['number']
-            adjective = request.form['adjective']
-            noun = request.form['noun']
-            message = (adjective + " " + noun)
-
-            #Sends the text message with BLOWER.IO
-            return redirect(url_for('send_message', number=number, message=message, source = "/RandomGenerator"))
-
-    return render_template('randomtext.html', error=error, adjective=adjective, noun=noun)
-
+    return(jsonify(noun=generated[0], adjective=generated[1]))
 
 @app.route('/logout')
 @login_required
