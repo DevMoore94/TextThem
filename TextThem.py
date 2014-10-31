@@ -112,7 +112,6 @@ def index():
 
 
 @app.route('/sendtext', methods=['GET', 'POST'])
-#@login_required
 def send_text():
     error = None
 
@@ -142,7 +141,6 @@ def register():
 
 
 @app.route('/RandomGenerator', methods=['GET', 'POST'])
-@login_required
 def randomgenerator():
     generated = generateMessage()
     adjective = generated[0]
@@ -161,7 +159,7 @@ def randomgenerator():
             message = (adjective + " " + noun)
 
             #Sends the text message with BLOWER.IO
-            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+            return redirect(url_for('send_message', number=number, message=message, source = "/RandomGenerator"))
 
     return render_template('randomtext.html', error=error, adjective=adjective, noun=noun)
 
