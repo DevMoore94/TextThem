@@ -1,23 +1,61 @@
+{% set navigation_bar = [
+(url_for('send_text'), 'send', 'Send Text'),
+(url_for('randomgenerator'), 'randomgenerator', 'Random Generator'),
+(url_for('aboutUs'), 'aboutus', 'About Us'),
+(url_for('login'), 'login', 'Login'),
+(url_for('register'), 'register', 'Register'),
+(url_for('logout'), 'logout', 'Logout'),
+]
+-%}
 <!doctype html>
 <title>Text Them</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <body>
 	<div>
-		<div class=centeredImage>
+		<div class="banner">
 			<a href="/"><img src="static/logo.png" alt="logo" align="middle" /></a>
-		</div>  
-		<ul id="menu_wrap" class="Orange">
-			<li class="button"><a href="{{ url_for('send_text')}}">Send Text</a></li>
-			<li class="button"><a href="{{ url_for('randomgenerator') }}">Random Generator</a></li>
-			<li class="button"><a href="{{ url_for('login') }}">Login</a></li>
-			<li class="button"><a href="{{ url_for('register') }}">Register</a></li>
-			<li class="button"><a href="{{ url_for('logout')}}">Logout</a></li>
-			<li class="button"><a href="{{ url_for('aboutUs') }}">About Us</a></li>
-		</ul>
-		{% block body %}
-		{% endblock %}
+		</div>
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid orange">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav ">
+						{% for href, id, caption in navigation_bar %}
+						{% if
+						(user.is_authenticated() and (id != "login" and id != "register")) or
+						(not user.is_authenticated() and id != "logout") %}
+						<li class="{% if id == active_page %}active{% endif %}"><a href="{{ href }}">{{ caption }}</a></li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-6">
+					{% block body %}
+					{% endblock %}
+				</div>
+				<div class="col-md-3">
+				</div>
+			</div>
+		</div>
 	</div>
-</body>  
+</body>
 
 
 
