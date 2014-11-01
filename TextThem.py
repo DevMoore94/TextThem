@@ -88,29 +88,44 @@ def generateMessage():
 
 #end of generateMessage() function
 
+@app.route('/smsapi', methods=['GET', 'POST'])
+@login_required
+def send_message(data=None):
+    """function for sending sms.
+        validates if user is valid > sends message > redirects to source path
+        Assumes URL of the form /smsapi?number=12341234&message=message&source=/url
+    """
+    number = request.args.get('number')
+    message = request.args.get('message')
+    source = request.args.get('source')
+    if Production:
+        requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+    else:
+        app.logger.info(str({'to': '+' + number, 'message': message}))
+
+    return  redirect("."+source)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/sendtext' ,methods=['GET', 'POST'] )
-
+@app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
-   
     error = None
 
     if request.method == 'POST':
-        
-        if(request.form['number'] == "" or request.form['message'] == ""):
+
+        if (request.form['number'] == "" or request.form['message'] == ""):
             error = "Please fill in the above fields"
         else:
             number = request.form['number']
             message = request.form['message']
-            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
-    
-    
-    return render_template('send.html', error=error)    
+            return redirect(url_for('send_message', number=number, message=message, source = "/sendtext"))
+
+
+    return render_template('send.html', error=error)
 
 
 @app.route('/login', methods=['GET', 'POST'])
