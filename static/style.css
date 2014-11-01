@@ -2,6 +2,10 @@ body {
 	background-color: #FDF3E7;
 }
 
+.error{
+	font-weight: bold;
+}
+
 .banner {
 	text-align:center;
 	margin-top: 20px;
