@@ -18,6 +18,7 @@ lib64/
 parts/
 sdist/
 var/
+bin/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -58,3 +59,23 @@ target/
 .idea/scopes/scope_settings.xml
 
 .idea/workspace.xml
+
+.idea/.name
+
+.idea/modules.xml
+
+.idea/TextThem.iml
+
+.idea/vcs.xml
+
+.idea/encodings.xml
+
+bin/activate
+
+bin/activate_this.py
+
+bin/activate.csh
+
+bin/activate.fish
+
+include/python2.7
