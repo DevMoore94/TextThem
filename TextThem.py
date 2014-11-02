@@ -88,7 +88,7 @@ def generateMessage():
 
 #end of generateMessage() function
 
-@app.route('/smsapi', methods=['GET'])
+@app.route('/smsapi', methods=['GET', 'POST'])
 @login_required
 def send_message(data=None):
     """function for sending sms.
