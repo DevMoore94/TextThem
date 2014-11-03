@@ -50,8 +50,11 @@ else:
     url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
     redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
 
+
 redis.delete("Brandon_Contact")
-redis.rpush('Brandon_Contact',"Britt Kiearstead - 15062278951")
+redis.rpush('Brandon_Contact',"Stan Smith- 15062278951")
+redis.rpush('Brandon_Contact',"Peter Griffin - 15062287951")
+redis.rpush('Brandon_Contact',"Charlie Sheen - 15062278589")
 print(redis.lrange("Brandon_Contact",0,-1))
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
@@ -132,6 +135,7 @@ def index():
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
+   
     list = redis.lrange('Brandon_Contact',0,-1)
     error = None
 
@@ -150,7 +154,7 @@ def send_text():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('test')
+    
     return render_template('login.html')
 
 
