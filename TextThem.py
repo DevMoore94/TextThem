@@ -4,6 +4,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from contextlib import closing
 import requests
 import urlparse
+import redis
 
 import random
 from flask.ext.stormpath import (
@@ -35,11 +36,23 @@ if (Production):
     app.config['STORMPATH_API_KEY_ID'] = os.environ['STORMPATH_API_KEY_ID']
     app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
     app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
+
+    url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost'))
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
+
 else:
     app.config['SECRET_KEY'] = "1s2b3c4dzxy"
     app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
     app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
     app.config['STORMPATH_APPLICATION'] = "TextThem"
+
+    url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
+redis.delete("Brandon_Contact")
+redis.rpush('Brandon_Contact',"Britt Kiearstead - 15062278951")
+print(redis.lrange("Brandon_Contact",0,-1))
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
@@ -119,7 +132,7 @@ def index():
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
-    list = ["Brandon Moore","Brodie Adams","Brittany Kierstead"]
+    list = redis.lrange('Brandon_Contact',0,-1)
     error = None
 
     if request.method == 'POST':
