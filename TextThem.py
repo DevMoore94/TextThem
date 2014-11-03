@@ -119,6 +119,7 @@ def index():
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
+    list = ["Brandon Moore","Brodie Adams","Brittany Kierstead"]
     error = None
 
     if request.method == 'POST':
@@ -131,7 +132,7 @@ def send_text():
             return redirect(url_for('send_message', number=number, message=message, source = "/sendtext"))
 
 
-    return render_template('send.html', error=error)
+    return render_template('send.html', error=error, users=list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
