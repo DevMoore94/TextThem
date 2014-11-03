@@ -1,4 +1,4 @@
-import os
+import os, sys
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
 from contextlib import closing
@@ -21,6 +21,12 @@ Production = True
 
 # create app
 app = Flask(__name__)
+
+if 'HEROKU' not in os.environ:
+    # You can start the app with -- to enable debugging
+    if len(sys.argv) > 1 and sys.argv[1] == '--testing':
+        app.config['DEBUG'] = True
+        Production = False
 
 #Setup Stormpath variables
 if (Production):
@@ -176,5 +182,5 @@ def aboutUs():
     return render_template('aboutus.html')
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if 'HEROKU' not in os.environ:
+    app.run()
