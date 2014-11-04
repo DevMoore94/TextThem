@@ -29,7 +29,7 @@ if 'HEROKU' not in os.environ:
         app.config['DEBUG'] = True
         Production = False
 
-#Setup Stormpath variables
+#Setup Stormpath variables and Redis DB
 if (Production):
 
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
@@ -46,7 +46,7 @@ else:
     app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
     app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
     app.config['STORMPATH_APPLICATION'] = "TextThem"
-
+    
     url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
     redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
 
