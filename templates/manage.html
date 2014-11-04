@@ -13,8 +13,8 @@
     <label for="InputMessage">Enter contact number:</label>
     <input class="form-control" type=text id="InputNumber" name="contact_number" >
   </div>
-  <button type=submit id="SendTextbtn" value=Send class="btn btn-default ">Submit</button>
+  <button type=submit id="addContactbtn" value=Send class="btn btn-default ">Submit</button>
   
   </form>
-
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='disable_manage_button.js') }}"></script>
 {% endblock %}
