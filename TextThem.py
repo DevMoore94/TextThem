@@ -17,7 +17,7 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-Production = False
+Production = True
 
 # create app
 app = Flask(__name__)
