@@ -15,8 +15,14 @@
 	<button id="random_button" type=button onclick="set_text()" class="btn btn-default">Random</button>
 	{% if user.is_authenticated() %}
   	<button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
-  	{% endif %}
+  {% endif %}
 	{% if error %} <div class="error"><strong>Error:</strong> {{ error }}{% endif %}
+  <div class="checkbox">
+    {% if user.is_authenticated() %}
+      <label>
+      <input type="checkbox" id="Anonymous_checkbox" name="Anonymous_checkbox"> Do not Track
+      </label>
+    {% endif %}
 </form>
 
 <!-- Large modal -->
