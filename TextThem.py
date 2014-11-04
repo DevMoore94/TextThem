@@ -134,8 +134,12 @@ def index():
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
-   
-    contacts = redis.lrange(user.username +"_phonebook",0,-1)
+    
+    if(user.is_anonymous()):
+        contacts = []
+    else:
+        contacts = redis.lrange(user.username +"_phonebook",0,-1)
+    
     error = None
 
     if request.method == 'POST':
@@ -158,7 +162,7 @@ def login():
 
 @app.route('/manage', methods=['GET', 'POST'])
 def manage():
-    print(user.username)
+    
 
     if request.method == 'POST':
         
