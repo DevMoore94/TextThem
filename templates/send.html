@@ -32,8 +32,8 @@
       <div class="modal-body">
         <form id="contactForm" method="post" role='form'>
           <div class="radio">
-            {% for user in users %}
-            <label>  <input type="radio" id="Contact" name="person" value="{{user}}"/> {{user}} </label>
+            {% for contact in contacts %}
+            <label>  <input type="radio" id="Contact" name="person" value="{{contact}}"/> {{contact}} </label>
             <br>
           {% endfor %}
         </div>
