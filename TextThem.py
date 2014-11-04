@@ -141,7 +141,7 @@ def index():
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
    
-    list = redis.lrange('Brandon_Contact',0,-1)
+    contacts = redis.lrange(user.username +"_phonebook",0,-1)
     error = None
 
     if request.method == 'POST':
@@ -154,7 +154,7 @@ def send_text():
             return redirect(url_for('send_message', number=number, message=message, source = "/sendtext"))
 
 
-    return render_template('send.html', error=error, users=list)
+    return render_template('send.html', error=error, contacts=contacts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -164,6 +164,11 @@ def login():
 
 @app.route('/manage', methods=['GET', 'POST'])
 def manage():
+    print(user.username)
+
+    if request.method == 'POST':
+        
+        redis.rpush(user.username+"_phonebook", request.form['contact_name'] +" - " + request.form['contact_number'] )
 
     return render_template('manage.html')
 
