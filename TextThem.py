@@ -59,6 +59,11 @@ stormpath_manager = StormpathManager(app)
 
 stormpath_manager.login_view = 'login'
 
+def logMessage(number, message):
+    try:
+        redis.rpush(user.username + "_Messages", number + " " + message)
+    except exception as e:
+        print(e.message())
 
 def generateMessage():
     """Generate a random adjective and noun
@@ -121,15 +126,24 @@ def send_message(data=None):
     source = request.args.get('source')
     if Production:
         requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+        logMessage(number,message)
     else:
         app.logger.info(str({'to': '+' + number, 'message': message}))
+        logMessage(number,message)
 
     return  redirect("."+source)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+
+    if(user.is_anonymous()):
+        messages = []
+    else:
+        messages = redis.lrange(user.username +"_Messages",0,-1)
+
+    
+    return render_template('index.html', messages=messages)
 
 
 @app.route('/sendtext', methods=['GET', 'POST'])
