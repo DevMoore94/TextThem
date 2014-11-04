@@ -13,8 +13,43 @@
 	</div>
 	<button id="submit_button" type=submit value=Send class="btn btn-default disabled">Submit</button>
 	<button id="random_button" type=button onclick="set_text()" class="btn btn-default">Random</button>
+	{% if user.is_authenticated() %}
+  	<button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
+  	{% endif %}
 	{% if error %} <div class="error"><strong>Error:</strong> {{ error }}{% endif %}
 </form>
+
+<!-- Large modal -->
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="phonebookModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;
+        </span><span class="sr-only">Close</span></button>  
+        <h4 class="modal-title">Contacts</h4> 
+      </div>
+      <div class="modal-body">
+        <form id="contactForm" method="post" role='form'>
+          <div class="radio">
+            {% for contact in contacts %}
+            <label>  <input type="radio" id="Contact" name="person" value="{{contact}}"/> {{contact}} </label>
+            <br>
+          {% endfor %}
+        </div>
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Select</button>
+        
+        
+      </div>
+      </form> 
+    </div>
+  </div>
+</div>
+
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='randomgenerator.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='disable_button.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='phonebook_modal.js') }}"></script>
 {% endblock %}

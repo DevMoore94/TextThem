@@ -12,6 +12,7 @@ httplib2==0.9
 itsdangerous==0.24
 oauth2client==1.2
 python-openid==2.2.5
+redis==2.10.3
 requests==2.4.1
 six==1.8.0
 stormpath==1.2.4
