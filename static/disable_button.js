@@ -10,7 +10,6 @@ function updateSubmitStatus(){
 }
 
 
-
 $(document).ready(function(){
 
 
