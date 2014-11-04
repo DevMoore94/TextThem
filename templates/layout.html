@@ -3,7 +3,8 @@
 (url_for('aboutUs'), 'aboutus', 'About Us'),
 (url_for('login'), 'login', 'Login'),
 (url_for('register'), 'register', 'Register'),
-(url_for('logout'), 'logout', 'Logout')
+(url_for('logout'), 'logout', 'Logout'),
+(url_for('manage'), 'manage', 'Manage Contacts')
 ]
 -%}
 <!doctype html>
@@ -33,7 +34,7 @@
 						{% for href, id, caption in navigation_bar %}
 						{% if
 						(user.is_authenticated() and (id != "login" and id != "register")) or
-						(not user.is_authenticated() and id != "logout") %}
+						(not user.is_authenticated() and id != "logout" and id != "manage") %}
 						<li class="{% if id == active_page %}active{% endif %}"><a href="{{ href }}">{{ caption }}</a></li>
 						{% endif %}
 						{% endfor %}
