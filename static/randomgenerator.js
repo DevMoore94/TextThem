@@ -11,6 +11,7 @@ function get_random() {
 
 function set_text() {
 	$("#InputMessage").val(adjective + " " + noun);
+	$("#InputMessage").trigger('change');
 	get_random();
 }
 
