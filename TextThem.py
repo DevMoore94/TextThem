@@ -154,9 +154,13 @@ def send_text():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    
+
     return render_template('login.html')
 
+@app.route('/manage', methods=['GET', 'POST'])
+def manage():
+
+    return render_template('manage.html')
 
 #register a user
 @app.route('/register', methods=['GET', 'POST'])
@@ -192,6 +196,7 @@ def randomgenerator():
 @login_required
 def logout():
     logout_user()
+
     return redirect(url_for('index'))
 
 
