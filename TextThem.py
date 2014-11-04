@@ -46,16 +46,10 @@ else:
     app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
     app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
     app.config['STORMPATH_APPLICATION'] = "TextThem"
-    
+
     url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
     redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
 
-
-redis.delete("Brandon_Contact")
-redis.rpush('Brandon_Contact',"Stan Smith- 15062278951")
-redis.rpush('Brandon_Contact',"Peter Griffin - 15062287951")
-redis.rpush('Brandon_Contact',"Charlie Sheen - 15062278589")
-print(redis.lrange("Brandon_Contact",0,-1))
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
