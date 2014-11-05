@@ -1,9 +1,10 @@
-import os
+import os, sys
 from flask import Flask, request, session, g, redirect, url_for, \
-    abort, render_template, flash
+    abort, render_template, flash, jsonify
 from contextlib import closing
 import requests
 import urlparse
+import redis
 
 import random
 from flask.ext.stormpath import (
@@ -22,18 +23,33 @@ Production = True
 # create app
 app = Flask(__name__)
 
-#Setup Stormpath variables
+if 'HEROKU' not in os.environ:
+    # You can start the app with -- to enable debugging
+    if len(sys.argv) > 1 and sys.argv[1] == '--testing':
+        app.config['DEBUG'] = True
+        Production = False
+
+#Setup Stormpath variables and Redis DB
 if (Production):
 
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
     app.config['STORMPATH_API_KEY_ID'] = os.environ['STORMPATH_API_KEY_ID']
     app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
     app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
+
+    url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost'))
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
+
 else:
     app.config['SECRET_KEY'] = "1s2b3c4dzxy"
     app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
     app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
     app.config['STORMPATH_APPLICATION'] = "TextThem"
+
+    url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
@@ -43,8 +59,18 @@ stormpath_manager = StormpathManager(app)
 
 stormpath_manager.login_view = 'login'
 
+def logMessage(number, message):
+    try:
+        redis.rpush(user.username + "_Messages", number + " " + message)
+    except exception as e:
+        print(e.message())
 
 def generateMessage():
+    """Generate a random adjective and noun
+
+    Returns:
+        tuple - (string, string)
+    """
     error = None
     #Try to open files
     try:
@@ -78,7 +104,7 @@ def generateMessage():
             lineNum = lineNum + 1
 
         #return the selected words
-        return (adjective, noun)
+        return (adjective.strip(), noun.strip())
     #catch if there is a problem opening the files
     except IOError:
         error = "We are experiencing some problems. Sorry for the inconvenience. :("
@@ -100,19 +126,34 @@ def send_message(data=None):
     source = request.args.get('source')
     if Production:
         requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
+        logMessage(number,message)
     else:
         app.logger.info(str({'to': '+' + number, 'message': message}))
+        logMessage(number,message)
 
     return  redirect("."+source)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+
+    if(user.is_anonymous()):
+        messages = []
+    else:
+        messages = redis.lrange(user.username +"_Messages",0,-1)
+
+    
+    return render_template('index.html', messages=messages)
 
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
+    
+    if(user.is_anonymous()):
+        contacts = []
+    else:
+        contacts = redis.lrange(user.username +"_phonebook",0,-1)
+    
     error = None
 
     if request.method == 'POST':
@@ -125,14 +166,23 @@ def send_text():
             return redirect(url_for('send_message', number=number, message=message, source = "/sendtext"))
 
 
-    return render_template('send.html', error=error)
+    return render_template('send.html', error=error, contacts=contacts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('test')
+
     return render_template('login.html')
 
+@app.route('/manage', methods=['GET', 'POST'])
+def manage():
+    
+
+    if request.method == 'POST':
+        
+        redis.rpush(user.username+"_phonebook", request.form['contact_name'] +" - " + request.form['contact_number'] )
+
+    return render_template('manage.html')
 
 #register a user
 @app.route('/register', methods=['GET', 'POST'])
@@ -143,31 +193,13 @@ def register():
 @app.route('/RandomGenerator', methods=['GET', 'POST'])
 def randomgenerator():
     generated = generateMessage()
-    adjective = generated[0]
-    noun = generated[1]
-
-    error = None
-    if request.method == 'POST':
-
-        if (request.form['number'] == "" ):
-            error = "Please fill in number for the text and select an adjective and noun"
-        else:
-
-            number = request.form['number']
-            adjective = request.form['adjective']
-            noun = request.form['noun']
-            message = (adjective + " " + noun)
-
-            #Sends the text message with BLOWER.IO
-            return redirect(url_for('send_message', number=number, message=message, source = "/RandomGenerator"))
-
-    return render_template('randomtext.html', error=error, adjective=adjective, noun=noun)
-
+    return(jsonify(noun=generated[0], adjective=generated[1]))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
+
     return redirect(url_for('index'))
 
 
@@ -176,5 +208,5 @@ def aboutUs():
     return render_template('aboutus.html')
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if 'HEROKU' not in os.environ:
+    app.run()

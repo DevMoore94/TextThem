@@ -19,9 +19,17 @@ body {
 	color:#fff !important;
 }
 .orange li a:hover {
-	color
+	background-color:#F9BC59 !important
 }
 
 .orange .active a{
 	background-color:#F9BC59 !important;
 }
+
+.jumbotron {
+	border-style: solid;
+    border-width: medium;
+    border-color: #f68c31;
+	
+}
+

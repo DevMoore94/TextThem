@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 {% set active_page = "index" %}
 {% block body %}
-<h1> New Home Page </h1>
+<div class="jumbotron">
+  <h2>Message History:</h2>
+  {% for message in messages %}
+  	<p>To: {{message.split()[0]}} </p>
+  	<p>Message: {{message.split(' ',1)[1]}} </p>
+  	<p>------------------------------------------------------------</p>
+    <br>
+  {% endfor %}
+  
+</div>
 {% endblock %}
