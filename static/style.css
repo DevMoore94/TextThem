@@ -33,3 +33,8 @@ body {
 	
 }
 
+.message_table{
+	height: 125px !important;
+    overflow: scroll;	
+}
+
