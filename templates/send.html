@@ -1,30 +1,39 @@
 {% extends "layout.html" %}
 {% set active_page = "send" %}
 {% block body %}
-<h2> Send a Text </h2>
-<form action="{{ url_for('send_text') }}" method=post class="form" role="form">
-	<div class="form-group">
-		<label for="InputNumber">Enter number for text:</label>
-		<input class="form-control " type=text id="InputNumber" name="number" placeholder="e.g. 1-XXX-XXX-XXXX">
-	</div>
-	<div class="form-group">
-		<label for="InputMessage">Enter message for text:</label>
-		<input class="form-control" type=text id="InputMessage" name="message">
-	</div>
-	<button id="submit_button" type=submit value=Send class="btn btn-default disabled">Submit</button>
-	<button id="random_button" type=button onclick="set_text()" class="btn btn-default">Random</button>
-	{% if user.is_authenticated() %}
-  	<button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
-  {% endif %}
-	{% if error %} <div class="error"><strong>Error:</strong> {{ error }}{% endif %}
-  <div class="checkbox">
-    {% if user.is_authenticated() %}
-      <label>
-      <input type="checkbox" id="Anonymous_checkbox" name="Anonymous_checkbox"> Do not Track
-      </label>
-    {% endif %}
-</form>
-
+<div class="container">
+    <div class = "row">
+        <div class = "col-md-3"></div>
+            <div class = "col-md-6">
+                <h2> Send a Text </h2>
+                <form action="{{ url_for('send_text') }}" method=post class="form" role="form">
+                    <div class="form-group">
+                        <label for="InputNumber">Enter number for text:</label>
+                        <input class="form-control " type=text id="InputNumber" name="number" placeholder="e.g. 1-XXX-XXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputMessage">Enter message for text:</label>
+                        <input class="form-control" type=text id="InputMessage" name="message">
+                    </div>
+                    <button id="submit_button" type=submit value=Send class="btn btn-default disabled">Submit</button>
+                    <button id="random_button" type=button onclick="set_text()" class="btn btn-default">Random</button>
+                    <button id="rick_button" type=button onclick="getRickRoll()" class="btn btn-default">Rick Roll</button>
+                    {% if user.is_authenticated() %}
+                    <button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
+                  {% endif %}
+                    <div class="error">{% if error %}<strong>Error:</strong> {{ error }}{% endif %}</div>
+                  <div class="checkbox">
+                    {% if user.is_authenticated() %}
+                      <label>
+                      <input type="checkbox" id="Anonymous_checkbox" name="Anonymous_checkbox"> Do not Track
+                      </label>
+                    {% endif %}
+                    </div>
+                </form>
+            </div>
+        <div class = "col-md-3"></div>
+    </div>
+</div>
 <!-- Large modal -->
 
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="phonebookModal">
@@ -53,9 +62,11 @@
       </form> 
     </div>
   </div>
+ </div>
 </div>
-
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='util.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='randomgenerator.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='rick_roll.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='disable_button.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='phonebook_modal.js') }}"></script>
 {% endblock %}

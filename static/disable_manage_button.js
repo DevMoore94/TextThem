@@ -1,4 +1,4 @@
-function updateSubmitStatus(){
+function updateSubmitStatus() {
 	if($("#InputNumber").parent().hasClass("has-success") && $("#InputName").parent().hasClass("has-success")){
 		$("#addContactbtn").removeClass("disabled");
 	} else{
@@ -12,7 +12,7 @@ $(document).ready(function(){
 	$("#InputNumber").on("change keyup paste click", function(){
 		var current_number = $(this).val();
 
-		if(current_number.length > 0){
+		if(current_number.match(TextThemUtil.US_CA_PHONE_NO_REGEX)) {
 			$(this).parent().removeClass("has-error");
 			$(this).parent().addClass("has-success");
 		} else {

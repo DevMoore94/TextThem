@@ -137,13 +137,15 @@ def send_message(data=None):
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
+    contacts = [] if user.is_anonymous() else redis.lrange(user.username +"_phonebook",0,-1)
+
     if(user.is_anonymous()):
         messages = []
     else:
         messages = redis.lrange(user.username +"_Messages",0,-1)
 
     
-    return render_template('index.html', messages=messages)
+    return render_template('index.html', contacts=contacts, messages=messages)
 
 
 @app.route('/sendtext', methods=['GET', 'POST'])
