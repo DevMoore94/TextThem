@@ -1,14 +1,33 @@
 {% extends "layout.html" %}
 {% set active_page = "index" %}
 {% block body %}
-<div class="jumbotron">
-  <h2>Message History:</h2>
-  {% for message in messages %}
-  	<p>To: {{message.split()[0]}} </p>
-  	<p>Message: {{message.split(' ',1)[1]}} </p>
-  	<p>------------------------------------------------------------</p>
-    <br>
-  {% endfor %}
-  
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="jumbotron landing-page-tile">
+            <h2>Contacts </h2>
+            {% for contact in contacts %}
+                <div>{{contact}}</div>
+                <br>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class ="col-md-4">
+
+            <div class="jumbotron landing-page-tile">
+
+              <h2>Message History:</h2>
+              {% for message in messages %}
+                <p>To: {{message.split()[0]}} </p>
+                <p>Message: {{message.split(' ',1)[1]}} </p>
+                <p>------------------------------------------------------------</p>
+                <br>
+              {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
 {% endblock %}
