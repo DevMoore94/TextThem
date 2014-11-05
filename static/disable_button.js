@@ -1,7 +1,5 @@
 
-var US_CA_PHONE_NO_REGEX = /^1[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-
-function updateSubmitStatus(){
+function updateSubmitStatus() {
 	if($("#InputNumber").parent().hasClass("has-success") && $("#InputMessage").parent().hasClass("has-success")){
 		$("#submit_button").removeClass("disabled");
 	} else{
@@ -10,13 +8,13 @@ function updateSubmitStatus(){
 }
 
 
-$(document).ready(function(){
+$(document).ready(function() {
 
 
 	$("#InputNumber").on("change keyup paste click", function(){
 		var current_number = $(this).val();
 
-		if(current_number !== "" && current_number.match(US_CA_PHONE_NO_REGEX)){
+		if(current_number.match(TextThemUtil.US_CA_PHONE_NO_REGEX)){
 			$(this).parent().removeClass("has-error");
 			$(this).parent().addClass("has-success");
 		}else {
@@ -30,7 +28,7 @@ $(document).ready(function(){
 
 	$("#InputMessage").on("change keyup paste click", function(){
 		var current_message = $(this).val();
-		if(current_message.length > 0){
+		if(current_message.length > 0 && current_message.length < TextThemUtil.MESSAGE_CHAR_LIMIT){
 			$(this).parent().removeClass("has-error");
 			$(this).parent().addClass("has-success");
 		} else {
