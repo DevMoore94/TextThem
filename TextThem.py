@@ -59,9 +59,12 @@ stormpath_manager = StormpathManager(app)
 
 stormpath_manager.login_view = 'login'
 
+
+#Store messages in redis database.
 def logMessage(number, message):
     try:
         redis.rpush(user.username + "_Messages", number + " " + message)
+        print("LOGGED")
     except exception as e:
         print(e.message())
 
@@ -124,12 +127,20 @@ def send_message(data=None):
     number = request.args.get('number')
     message = request.args.get('message')
     source = request.args.get('source')
+    anonymous = request.args.get('anonymous')
+
+    
+    
+    if(anonymous==None):
+        logMessage(number,message)
+
     if Production:
         requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+' + number, 'message': message})
-        logMessage(number,message)
-    else:
+    else:      
         app.logger.info(str({'to': '+' + number, 'message': message}))
-        logMessage(number,message)
+
+         
+        
 
     return  redirect("."+source)
 
@@ -143,29 +154,34 @@ def index():
         messages = []
     else:
         messages = redis.lrange(user.username +"_Messages",0,-1)
-
-    
-    return render_template('index.html', contacts=contacts, messages=messages)
+            
+    return render_template('index.html', contacts=contacts, messages=reversed(messages))
 
 
 @app.route('/sendtext', methods=['GET', 'POST'])
 def send_text():
     
+    anonymous = None
+    error = None
+
     if(user.is_anonymous()):
         contacts = []
     else:
         contacts = redis.lrange(user.username +"_phonebook",0,-1)
     
-    error = None
-
+    
     if request.method == 'POST':
+
+        if 'Anonymous_checkbox' in request.form:
+           anonymous = True
+      
 
         if (request.form['number'] == "" or request.form['message'] == ""):
             error = "Please fill in the above fields"
         else:
             number = request.form['number']
             message = request.form['message']
-            return redirect(url_for('send_message', number=number, message=message, source = "/sendtext"))
+            return redirect(url_for('send_message', number=number, message=message,anonymous=anonymous, source = "/sendtext"))
 
 
     return render_template('send.html', error=error, contacts=contacts)
@@ -196,6 +212,11 @@ def register():
 def randomgenerator():
     generated = generateMessage()
     return(jsonify(noun=generated[0], adjective=generated[1]))
+
+@app.route('/ClearHistory', methods=['GET', 'POST'])
+def clearhistory():
+    redis.delete(user.username + "_Messages")
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required

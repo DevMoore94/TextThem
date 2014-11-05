@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% set active_page = "index" %}
 {% block body %}
+
+{% if user.is_authenticated() %}
 <div class="container">
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="jumbotron landing-page-tile">
             <h2>Contacts </h2>
             {% for contact in contacts %}
@@ -14,20 +16,38 @@
             </div>
         </div>
 
-        <div class ="col-md-4">
+        <div class ="col-md-6">
 
             <div class="jumbotron landing-page-tile">
 
-              <h2>Message History:</h2>
-              {% for message in messages %}
-                <p>To: {{message.split()[0]}} </p>
-                <p>Message: {{message.split(' ',1)[1]}} </p>
-                <p>------------------------------------------------------------</p>
-                <br>
-              {% endfor %}
+              <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Recent Messages: From {{user.username}} </div>
+                    <div class="panel-body">
+                        <form action="{{ url_for('clearhistory') }}" method=post class="form" role="form">
+                            <button id="submit_button" type=submit value=Send class="btn btn-default ">Clear History</button>
+                        </form>
+                    </div>
+
+                <!-- Table -->
+                <div class=message_table>
+                <table class="table">
+                    <tr>
+                        <th>Number</th>
+                        <th>Message</th>
+                    </tr>
+                    {% for message in messages %}
+                    <tr>   
+                        <td>{{message.split()[0]}} </td>
+                        <td>{{message.split(' ',1)[1]}} </td> 
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 </div>
+{% endif %}
 {% endblock %}
