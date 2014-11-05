@@ -43,3 +43,9 @@ body {
 a{
 	color:#fff;
 }
+.col-md-6{
+	border-style: solid;
+    border-width: medium;
+    border-color: #f68c31;
+    box-shadow: 10px 10px 5px #888;	
+}
