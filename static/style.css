@@ -1,5 +1,6 @@
 body {
 	background-color: #FDF3E7;
+
 }
 
 .error{
@@ -13,6 +14,7 @@ body {
 
 .orange {
 	background-color:#f68c31;
+
 }
 
 .orange li a {
@@ -30,7 +32,7 @@ body {
 	border-style: solid;
     border-width: medium;
     border-color: #f68c31;
-	
+    box-shadow: 10px 10px 5px #888;
 }
 
 .message_table{
@@ -40,4 +42,10 @@ body {
 
 a{
 	color:#fff;
+}
+.send_form{
+	border-style: solid;
+    border-width: medium;
+    border-color: #f68c31;
+    box-shadow: 10px 10px 5px #888;	
 }
