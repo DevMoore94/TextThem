@@ -52,13 +52,14 @@
 		color:#fff;
 	}
 	.send_form{
+		background-color:  #C7E916;
 		border-style: solid;
 	    border-width: medium;
 	    border-color: #009966;
 	    box-shadow: 10px 10px 5px #888;	
 	}
 
-	.jumbotron {
+	.jumbotron{
 		text-align: center;
 		background-color: #C7E916;
 	}
