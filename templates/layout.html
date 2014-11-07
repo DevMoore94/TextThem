@@ -2,7 +2,6 @@
 (url_for('send_text'), 'send', 'Send Text'),
 (url_for('aboutUs'), 'aboutus', 'About Us'),
 (url_for('login'), 'login', 'Login'),
-(url_for('register'), 'register', 'Register'),
 (url_for('logout'), 'logout', 'Logout'),
 (url_for('manage'), 'manage', 'Manage Contacts')
 ] -%}
@@ -35,7 +34,7 @@
 					<ul class="nav navbar-nav ">
 						{% for href, id, caption in navigation_bar %}
 						{% if
-						(user.is_authenticated() and (id != "login" and id != "register")) or
+						(user.is_authenticated() and (id != "login")) or
 						(not user.is_authenticated() and id != "logout" and id != "manage") %}
 						<li class="{% if id == active_page %}active{% endif %}"><a href="{{ href }}">{{ caption }}</a></li>
 						{% endif %}
