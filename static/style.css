@@ -1,7 +1,9 @@
 body {
 	background-color: #FDF3E7;
 
+
 }
+
 
 .error{
 	font-weight: bold;
@@ -12,26 +14,33 @@ body {
 	margin-top: 20px;
 }
 
-.orange {
-	background-color:#f68c31;
+.green {
+	background-color:#009966;
 
 }
 
-.orange li a {
-	color:#fff !important;
+.green li a {
+	color:#000 !important;
+	font-weight: bold;
 }
-.orange li a:hover {
-	background-color:#F9BC59 !important
+.green li a:hover {
+
+	background-color:white !important;
+	font-weight: 900;
+
+
 }
 
-.orange .active a{
-	background-color:#F9BC59 !important;
+.green .active a{
+	background-color:#fff !important;
+	font-weight: 900;
+	
 }
 
 .landing-page-tile {
 	border-style: solid;
     border-width: medium;
-    border-color: #f68c31;
+    border-color: #009966;
     box-shadow: 10px 10px 5px #888;
 }
 
@@ -46,6 +55,7 @@ a{
 .send_form{
 	border-style: solid;
     border-width: medium;
-    border-color: #f68c31;
+    border-color: #009966;
     box-shadow: 10px 10px 5px #888;	
 }
+
