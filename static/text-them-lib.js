@@ -37,19 +37,22 @@ function getRickRoll() {
 }
 
 
+function error(err) {
+  updateError('ERROR(' + err.code + '): ' + err.message);
+};
 
-function getLocation(){
- if(navigator.geolocation){
-     navigator.geolocation.getCurrentPosition(showPosition);
- } else {
-     return null
- }
-}
-
-function showPosition(position) {
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
+function success(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
     var path = "http://maps.google.com"
     var message = "Find me @ "+path+"/maps?q="+lat+", "+lng
     updateMessage(message)  
+};
+
+function getLocation(){
+ if(navigator.geolocation){
+     navigator.geolocation.getCurrentPosition(success, error);
+ } else {
+     return updateError("Geolocation is not supported by this browser.");
+ }
 }
