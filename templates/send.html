@@ -16,7 +16,7 @@
                         <input class="form-control" type=text id="InputMessage" name="message">
                     </div>
                     <button id="submit_button" type=submit value=Send class="btn btn-default disabled">Submit</button>
-                    <button id="random_button" type=button onclick="set_text()" class="btn btn-default">Random</button>
+                    <button id="random_button" type=button onclick="getRandom()" class="btn btn-default">Random</button>
                     <button id="rick_button" type=button onclick="getRickRoll()" class="btn btn-default">Rick Roll</button>
                     {% if user.is_authenticated() %}
                     <button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
@@ -64,9 +64,7 @@
   </div>
  </div>
 </div>
-<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='util.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='randomgenerator.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='rick_roll.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='text-them-lib.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='disable_button.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='phonebook_modal.js') }}"></script>
 {% endblock %}
