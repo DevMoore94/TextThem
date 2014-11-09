@@ -42,10 +42,10 @@ function error(err) {
 };
 
 function success(pos) {
-    var lat = pos.coords.latitude;
-    var lng = pos.coords.longitude;
+    var lat = Math.round(pos.coords.latitude*10000)/10000;
+    var lng = Math.round(pos.coords.longitude*10000)/10000;
     var path = "http://maps.google.com"
-    var message = "Find me @ "+path+"/maps?q="+lat+", "+lng
+    var message = "Find me @ "+path+"/maps?q="+lat+","+lng
     updateMessage(message)  
 };
 
