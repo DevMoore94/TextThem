@@ -18,6 +18,7 @@
                     <button id="submit_button" type=submit value=Send class="btn btn-default disabled">Submit</button>
                     <button id="random_button" type=button onclick="getRandom()" class="btn btn-default">Random</button>
                     <button id="rick_button" type=button onclick="getRickRoll()" class="btn btn-default">Rick Roll</button>
+                    <button id="geo_button" type=button onclick="getLocation()" class="btn btn-default">Geo</button>
                     {% if user.is_authenticated() %}
                     <button type="button" id="Phonebook_Button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">PhoneBook</button>
                   {% endif %}
