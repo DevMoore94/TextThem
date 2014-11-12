@@ -1,6 +1,7 @@
 Flask==0.10.1
 Flask-Login==0.2.9
 Flask-Stormpath==0.2.8
+Flask-Testing==0.4.2
 Flask-WTF==0.10.2
 Jinja2==2.7.3
 MarkupSafe==0.23
