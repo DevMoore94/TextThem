@@ -54,6 +54,13 @@ else:
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
 app.config['STORMPATH_ENABLE_FORGOT_PASSWORD'] = True
+app.config['STORMPATH_REGISTRATION_TEMPLATE'] = 'register.html'
+app.config['STORMPATH_LOGIN_TEMPLATE'] = 'login.html'
+app.config['STORMPATH_FORGOT_PASSWORD_TEMPLATE'] = 'forgot.html'
+app.config['STORMPATH_FORGOT_PASSWORD_EMAIL_SENT_TEMPLATE'] = 'forgot_email_sent.html'
+app.config['STORMPATH_FORGOT_PASSWORD_CHANGE_TEMPLATE'] = 'forgot_change.html'
+app.config['STORMPATH_FORGOT_PASSWORD_COMPLETE_TEMPLATE'] = 'forgot_complete.html'
+
 
 stormpath_manager = StormpathManager(app)
 
