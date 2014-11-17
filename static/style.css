@@ -1,5 +1,7 @@
+	
 	body {
 		background-color: #FDF3E7;
+		padding-bottom: 70px;
 
 
 	}
@@ -21,6 +23,7 @@
 	.green li a {
 		color:#000 !important;
 		font-weight: bold;
+		
 	}
 	.green li a:hover {
 
@@ -63,3 +66,26 @@
 		text-align: center;
 		background-color: #C7E916;
 	}
+
+	img {
+    	border-radius: 10px 10px 10px 10px;
+
+	}
+
+	.photos a {
+		font-family: "Times New Roman";
+		text-decoration: underline;
+		font-weight: bold;
+		font-size: 17px;
+		color: #4DB847;
+	}
+
+	.photos p{
+		font-family: "Times New Roman";
+		font-size: 17px;
+		color: #4DB847;
+	}
+	.image{
+		text-align: center;
+	}
+	
