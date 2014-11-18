@@ -1,6 +1,6 @@
 import os, sys
 from flask import Flask, request, session, g, redirect, url_for, \
-    abort, render_template, flash, jsonify
+    abort, render_template, flash, jsonify, abort
 from contextlib import closing
 import requests
 import urlparse
@@ -72,8 +72,8 @@ def logMessage(number, message):
     try:
         redis.rpush(user.username + "_Messages", number + " " + message)
         print("LOGGED")
-    except exception as e:
-        print(e.message())
+    except Exception as e:
+        print(e.message)
 
 def generateMessage():
     """Generate a random adjective and noun
@@ -125,7 +125,6 @@ def generateMessage():
 #end of generateMessage() function
 
 @app.route('/smsapi', methods=['GET', 'POST'])
-@login_required
 def send_message(data=None):
     """function for sending sms.
         validates if user is valid > sends message > redirects to source path
@@ -133,11 +132,16 @@ def send_message(data=None):
     """
     number = request.args.get('number')
     message = request.args.get('message')
-    source = request.args.get('source')
+    source = request.args.get('source', '/')
     anonymous = request.args.get('anonymous')
 
+    if message is not None:
+        if len(message) > 141:
+            abort(400)
     
-    
+    if number is None:
+        abort(400)
+
     if(anonymous==None):
         logMessage(number,message)
 
