@@ -18,20 +18,17 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-Production = True
 
-# create app
 app = Flask(__name__)
 
-if 'HEROKU' not in os.environ:
-    # You can start the app with -- to enable debugging
-    if len(sys.argv) > 1 and sys.argv[1] == '--testing':
-        app.config['DEBUG'] = True
-        Production = False
+if "HEROKU" in os.environ:
+    Production = True
+else:
+    app.config['DEBUG'] = True
+    Production = False
 
 #Setup Stormpath variables and Redis DB
-if (Production):
-
+if Production:
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
     app.config['STORMPATH_API_KEY_ID'] = os.environ['STORMPATH_API_KEY_ID']
     app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
@@ -39,7 +36,6 @@ if (Production):
 
     url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost'))
     redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
-
 
 else:
     app.config['SECRET_KEY'] = "1s2b3c4dzxy"
@@ -49,7 +45,6 @@ else:
 
     url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
     redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
-
 
 app.config['STORMPATH_ENABLE_USERNAME'] = True
 app.config['STORMPATH_REQUIRE_USERNAME'] = True
@@ -61,11 +56,8 @@ app.config['STORMPATH_FORGOT_PASSWORD_EMAIL_SENT_TEMPLATE'] = 'forgot_email_sent
 app.config['STORMPATH_FORGOT_PASSWORD_CHANGE_TEMPLATE'] = 'forgot_change.html'
 app.config['STORMPATH_FORGOT_PASSWORD_COMPLETE_TEMPLATE'] = 'forgot_complete.html'
 
-
 stormpath_manager = StormpathManager(app)
-
 stormpath_manager.login_view = 'login'
-
 
 #Store messages in redis database.
 def logMessage(number, message):
@@ -79,7 +71,7 @@ def generateMessage():
     """Generate a random adjective and noun
 
     Returns:
-        tuple - (string, string)
+        tuple - (string, string) - (adjective, noun)
     """
     error = None
     #Try to open files
@@ -241,6 +233,5 @@ def logout():
 def aboutUs():
     return render_template('aboutus.html')
 
-
-if 'HEROKU' not in os.environ:
+if __name__ == "__main__":
     app.run()
