@@ -33,5 +33,24 @@ class MyTest(TestCase):
     def test_databaseRead(self):
         redis_control.get("Test1")
 
+    def test_generateMessage(self):
+        rv = TextThem.generateMessage()
+
+        #Docstring of generateMessage assure returnvalue is (string, string) 
+        self.assertEqual(len(rv), 2)
+        self.assertTrue(isinstance(rv[0], basestring))
+        self.assertTrue(isinstance(rv[1], basestring))
+
+        with open('../static/adjectives.txt') as f:
+            adjectives = [word for l in f.readlines() for word in l.split()]
+        with open('../static/nouns.txt') as f:
+            nouns = [word for l in f.readlines() for word in l.split()]
+
+        self.assertIn(rv[0], adjectives)
+        self.assertIn(rv[1], nouns)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
