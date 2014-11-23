@@ -19,7 +19,7 @@ class MyTest(TestCase):
         return app
 
     def test_checkServer(self):
-       redis_control.ping
+        redis_control.ping
 
     def test_databaseWrite(self):
         
