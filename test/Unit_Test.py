@@ -41,9 +41,9 @@ class MyTest(TestCase):
         self.assertTrue(isinstance(rv[0], basestring))
         self.assertTrue(isinstance(rv[1], basestring))
 
-        with open('../static/adjectives.txt') as f:
+        with open('static/adjectives.txt') as f:
             adjectives = [word for l in f.readlines() for word in l.split()]
-        with open('../static/nouns.txt') as f:
+        with open('static/nouns.txt') as f:
             nouns = [word for l in f.readlines() for word in l.split()]
 
         self.assertIn(rv[0], adjectives)
