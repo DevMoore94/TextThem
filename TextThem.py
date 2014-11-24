@@ -18,7 +18,6 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
-
 app = Flask(__name__)
 
 if "HEROKU" in os.environ:
@@ -73,48 +72,17 @@ def generateMessage():
     Returns:
         tuple - (string, string) - (adjective, noun)
     """
-    error = None
-    #Try to open files
-    try:
-        #Local Variables
-        adjective = None
-        noun = None
-        lineNum = 0;
 
-        #Open the files
-        adjfile = open("static/adjectives.txt", 'r')
-        nounfile = open("static/nouns.txt", 'r')
+    with open("static/adjectives.txt") as f:
+        adjectives = f.readlines()
 
-        #Choose a random line in the files.
-        adjRan = random.randint(0, 689)
-        nounRan = random.randint(0, 3719)
+    with open("static/nouns.txt") as f:
+        nouns = f.readlines()
 
+    adjective = random.choice(adjectives).strip()
+    noun = random.choice(nouns).strip()
 
-
-        #locate the randomly selected lines in the corrosponding file/
-        for line in adjfile:
-            if (lineNum == adjRan):
-                adjective = line
-                break;
-            lineNum = lineNum + 1
-        lineNum = 0
-
-        for line in nounfile:
-            if (lineNum == nounRan):
-                noun = line
-                break;
-            lineNum = lineNum + 1
-
-        #return the selected words
-        return (adjective.strip(), noun.strip())
-    #catch if there is a problem opening the files
-    except IOError:
-        error = "We are experiencing some problems. Sorry for the inconvenience. :("
-        print("ERORR:" + e.message)
-        return render_template('randomtext.html', error=error)
-
-
-#end of generateMessage() function
+    return (adjective, noun)
 
 @app.route('/smsapi', methods=['GET', 'POST'])
 def send_message(data=None):
