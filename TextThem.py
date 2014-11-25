@@ -18,7 +18,54 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
+Production = True
+
+# create app
 app = Flask(__name__)
+
+if 'HEROKU' not in os.environ:
+    # You can start the app with -- to enable debugging
+    if len(sys.argv) > 1 and sys.argv[1] == '--testing':
+        app.config['DEBUG'] = True
+        Production = False
+
+#Setup Stormpath variables and Redis DB
+if (Production):
+
+    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+    app.config['STORMPATH_API_KEY_ID'] = os.environ['STORMPATH_API_KEY_ID']
+    app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
+    app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
+
+    url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost'))
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
+
+else:
+    app.config['SECRET_KEY'] = "1s2b3c4dzxy"
+    app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
+    app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
+    app.config['STORMPATH_APPLICATION'] = "TextThem"
+
+    url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
+    redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
+
+app.config['STORMPATH_ENABLE_USERNAME'] = True
+app.config['STORMPATH_REQUIRE_USERNAME'] = True
+app.config['STORMPATH_ENABLE_FORGOT_PASSWORD'] = True
+app.config['STORMPATH_REGISTRATION_TEMPLATE'] = 'register.html'
+app.config['STORMPATH_LOGIN_TEMPLATE'] = 'login.html'
+app.config['STORMPATH_FORGOT_PASSWORD_TEMPLATE'] = 'forgot.html'
+app.config['STORMPATH_FORGOT_PASSWORD_EMAIL_SENT_TEMPLATE'] = 'forgot_email_sent.html'
+app.config['STORMPATH_FORGOT_PASSWORD_CHANGE_TEMPLATE'] = 'forgot_change.html'
+app.config['STORMPATH_FORGOT_PASSWORD_COMPLETE_TEMPLATE'] = 'forgot_complete.html'
+
+
+stormpath_manager = StormpathManager(app)
+
+stormpath_manager.login_view = 'login'
+
 
 #Store messages in redis database.
 def logMessage(number, message):
@@ -34,17 +81,48 @@ def generateMessage():
     Returns:
         tuple - (string, string)
     """
+    error = None
+    #Try to open files
+    try:
+        #Local Variables
+        adjective = None
+        noun = None
+        lineNum = 0;
 
-    with open("static/adjectives.txt") as f:
-        adjectives = f.readlines()
+        #Open the files
+        adjfile = open("static/adjectives.txt", 'r')
+        nounfile = open("static/nouns.txt", 'r')
 
-    with open("static/adjectives.txt") as f:
-        nouns = f.readlines()
+        #Choose a random line in the files.
+        adjRan = random.randint(0, 689)
+        nounRan = random.randint(0, 3719)
 
-    adjective = random.choice(adjectives).strip()
-    noun = random.choice(nouns).strip()
 
-    return (adjective, noun)
+
+        #locate the randomly selected lines in the corrosponding file/
+        for line in adjfile:
+            if (lineNum == adjRan):
+                adjective = line
+                break;
+            lineNum = lineNum + 1
+        lineNum = 0
+
+        for line in nounfile:
+            if (lineNum == nounRan):
+                noun = line
+                break;
+            lineNum = lineNum + 1
+
+        #return the selected words
+        return (adjective.strip(), noun.strip())
+    #catch if there is a problem opening the files
+    except IOError:
+        error = "We are experiencing some problems. Sorry for the inconvenience. :("
+        print("ERORR:" + e.message)
+        return render_template('randomtext.html', error=error)
+
+
+#end of generateMessage() function
 
 @app.route('/smsapi', methods=['GET', 'POST'])
 def send_message(data=None):
@@ -164,49 +242,5 @@ def aboutUs():
     return render_template('aboutus.html')
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == '--testing':
-        app.config['DEBUG'] = True
-        Production = False
-    else:
-        Production = True
-
-
-#    if 'HEROKU' not in os.environ:
-    if not 'HEROKU' in os.environ and Production == True:
-        raise Exception('Something is wrong - in production mode but not on heroku')
-
-    #Setup Stormpath variables and Redis DB
-    if Production:
-        app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-        app.config['STORMPATH_API_KEY_ID'] = os.environ['STORMPATH_API_KEY_ID']
-        app.config['STORMPATH_API_KEY_SECRET'] = os.environ['STORMPATH_API_KEY_SECRET']
-        app.config['STORMPATH_APPLICATION'] = os.environ['STORMPATH_APPLICATION']
-
-        url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost'))
-        redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
-
-    else:
-        app.config['SECRET_KEY'] = "1s2b3c4dzxy"
-        app.config['STORMPATH_API_KEY_ID'] = "C1F8HU66CJ64TAY0138WHEJJX"
-        app.config['STORMPATH_API_KEY_SECRET'] = "xLPo62taHnzfhEmGGM0d5hfNpsiQqbx2F/bMeyoS5iM"
-        app.config['STORMPATH_APPLICATION'] = "TextThem"
-
-        url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
-        redis = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
-
-    app.config['STORMPATH_ENABLE_USERNAME'] = True
-    app.config['STORMPATH_REQUIRE_USERNAME'] = True
-    app.config['STORMPATH_ENABLE_FORGOT_PASSWORD'] = True
-    app.config['STORMPATH_REGISTRATION_TEMPLATE'] = 'register.html'
-    app.config['STORMPATH_LOGIN_TEMPLATE'] = 'login.html'
-    app.config['STORMPATH_FORGOT_PASSWORD_TEMPLATE'] = 'forgot.html'
-    app.config['STORMPATH_FORGOT_PASSWORD_EMAIL_SENT_TEMPLATE'] = 'forgot_email_sent.html'
-    app.config['STORMPATH_FORGOT_PASSWORD_CHANGE_TEMPLATE'] = 'forgot_change.html'
-    app.config['STORMPATH_FORGOT_PASSWORD_COMPLETE_TEMPLATE'] = 'forgot_complete.html'
-
-    stormpath_manager = StormpathManager(app)
-    stormpath_manager.login_view = 'login'
-
-    if not Production:
-        app.run()
+if 'HEROKU' not in os.environ:
+    app.run()
