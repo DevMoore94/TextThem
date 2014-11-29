@@ -1,6 +1,7 @@
 import sys
-sys.path.append(".")
-sys.path.append("..")
+import os
+#Add TextThem directory to path so we can import TextThem module
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import unittest
 import flask.ext.testing
 import urlparse
@@ -10,6 +11,7 @@ from redis import RedisError
 from flask import Flask
 from flask.ext.testing import TestCase
 
+PATH_TO_STATIC = os.path.join(os.path.dirname(__file__), "../static")
 
 url = urlparse.urlparse("redis://redistogo:8bc0a4a78f077cca60c78cca6e5a8f1e@dab.redistogo.com:9082/")
 redis_control = redis.Redis(host=url.hostname, port=url.port, db=0, password=url.password)
@@ -36,14 +38,14 @@ class MyTest(TestCase):
     def test_generateMessage(self):
         rv = TextThem.generateMessage()
 
-        #Docstring of generateMessage assure returnvalue is (string, string) 
+        #Docstring of generateMessage assure returnvalue is (string, string)
         self.assertEqual(len(rv), 2)
         self.assertTrue(isinstance(rv[0], basestring))
         self.assertTrue(isinstance(rv[1], basestring))
 
-        with open('static/adjectives.txt') as f:
+        with open(os.path.join(PATH_TO_STATIC, 'adjectives.txt')) as f:
             adjectives = [word for l in f.readlines() for word in l.split()]
-        with open('static/nouns.txt') as f:
+        with open(os.path.join(PATH_TO_STATIC, 'nouns.txt')) as f:
             nouns = [word for l in f.readlines() for word in l.split()]
 
         self.assertIn(rv[0], adjectives)

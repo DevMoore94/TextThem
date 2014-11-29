@@ -18,6 +18,8 @@ from flask.ext.stormpath import (
 
 from stormpath.error import Error as StormpathError
 
+PATH_TO_STATIC = os.path.join(os.path.dirname(__file__), "static")
+
 app = Flask(__name__)
 
 if "HEROKU" in os.environ:
@@ -73,10 +75,10 @@ def generateMessage():
         tuple - (string, string) - (adjective, noun)
     """
 
-    with open("static/adjectives.txt") as f:
+    with open(os.path.join(PATH_TO_STATIC, "adjectives.txt")) as f:
         adjectives = f.readlines()
 
-    with open("static/nouns.txt") as f:
+    with open(os.path.join(PATH_TO_STATIC, "nouns.txt")) as f:
         nouns = f.readlines()
 
     adjective = random.choice(adjectives).strip()
